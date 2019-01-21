@@ -1,13 +1,20 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "schematic-starter": {
-      "description": "A blank schematic.",
-      "factory": "./schematic-starter/index#schematicStarter"
-    },
     "ng-add": {
-      "description": "Add SchematicStarter to an application.",
-      "factory": "./schematic-starter/index#schematicStarter"
+      "description": "Adds cypress to an existing Angular CLI project",
+      "factory": "./cypress/index",
+      "schema": "./cypress/schema.json"
+    },
+    "cypress": {
+      "description": "Adds cypress to an existing Angular CLI project",
+      "factory": "./cypress/index",
+      "schema": "./cypress/schema.json"
+    },
+    "add": {
+      "description": "Adds cypress to an existing Angular CLI project",
+      "factory": "./cypress/index",
+      "schema": "./cypress/schema.json"
     }
   }
 }
