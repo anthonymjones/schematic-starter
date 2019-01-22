@@ -20,43 +20,44 @@ import {
   NodePackage,
   addPropertyToPackageJson,
   getAngularVersion,
-  getLatestNodeVersion
+  getLatestNodeVersion,
+  removePackageJsonDependency,
+  safeFileDelete
 } from "../utility/util";
 
-// You don't have to export the function as default. You can also have more than one rule factory
-// per file.
 export default function(_options: any): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     _options = { ..._options, __version__: getAngularVersion(tree) };
 
     return chain([
-      updateDependencies(),
-      // TODO: setup cli prompt to confirm removal of protractor
-      // removeFiles(),
+      updateDependencies(_options),
+      removeFiles(_options),
       addCypressFiles(),
       addCypressScriptsToPackageJson()
     ])(tree, _context);
   };
 }
 
-function updateDependencies(): Rule {
+function updateDependencies(options: any): Rule {
+  let removeDependencies: Observable<Tree>;
   return (tree: Tree, context: SchematicContext): Observable<Tree> => {
     context.logger.debug("Updating dependencies...");
     context.addTask(new NodePackageInstallTask());
 
-    // TODO: setup cli prompt to confirm removal of protractor
-    // const removeDependencies = of('protractor').pipe(
-    //   map((packageName: string) => {
-    //     context.logger.debug(`Removing ${packageName} dependency`);
+    if (options.removeProtractor) {
+      removeDependencies = of("protractor").pipe(
+        map((packageName: string) => {
+          context.logger.debug(`Removing ${packageName} dependency`);
 
-    //     removePackageJsonDependency(tree, {
-    //       type: NodeDependencyType.Dev,
-    //       name: packageName
-    //     });
+          removePackageJsonDependency(tree, {
+            type: NodeDependencyType.Dev,
+            name: packageName
+          });
 
-    //     return tree;
-    //   })
-    // );
+          return tree;
+        })
+      );
+    }
 
     const addDependencies = of(
       "cypress",
@@ -78,20 +79,36 @@ function updateDependencies(): Rule {
         return tree;
       })
     );
-    // TODO: setup cli prompt to confirm removal of protractor
-    return concat(/*removeDependencies,*/ addDependencies);
+
+    if (options.removeProtractor) {
+      return concat(removeDependencies, addDependencies);
+    }
+    return concat(addDependencies);
   };
 }
 
-// TODO: setup cli prompt to confirm removal of protractor
-// function removeFiles(): Rule {
-//   return (tree: Tree, context: SchematicContext) => {
-//     context.logger.debug('Removing protractor e2e directory');
-//     safeFileDelete(tree, './e2e');
+function removeFiles(options: any): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    if (options.removeProtractor) {
+      const deleteFiles = [
+        "./e2e/src/app.e2e-spec.ts",
+        "./e2e/src/app.po.ts",
+        "./e2e/protractor.conf.js",
+        "./e2e/tsconfig.e2e.json",
+        "./e2e/src",
+        "./e2e"
+      ];
+      deleteFiles.forEach(filePath => {
+        context.logger.debug(`removing ${filePath}`);
 
-//     return tree;
-//   };
-// }
+        safeFileDelete(tree, filePath);
+      });
+
+      return tree;
+    }
+    return tree;
+  };
+}
 
 function addCypressFiles(): Rule {
   return (tree: Tree, context: SchematicContext) => {
@@ -115,3 +132,14 @@ function addCypressScriptsToPackageJson(): Rule {
     return tree;
   };
 }
+
+// TODO: Add to the schema.json once deleting directories is available
+// "removeProtractor": {
+//   "description": "When true, the protractor dependency and e2e directory will be removed from the project",
+//   "type": "boolean",
+//   "$default": {
+//     "$source": "argv",
+//     "index": 0
+//   },
+//   "x-prompt": "Would you like to remove Protractor from the project?"
+// }

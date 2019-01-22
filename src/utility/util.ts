@@ -42,22 +42,7 @@ export enum Configs {
 export type WorkspaceSchema = experimental.workspace.WorkspaceSchema;
 
 export interface CypressOptions {
-  browser?: string;
-  ciBuildId?: string;
-  config?: string;
-  env?: string;
-  group?: string;
-  headed?: boolean;
-  help?: boolean;
-  key?: string;
-  noExit?: boolean;
-  parallel?: boolean;
-  port?: string;
   project?: string;
-  record?: boolean;
-  reporter?: string;
-  reporterOptions?: string;
-  spec?: string;
   __version__: number;
 }
 
