@@ -15,7 +15,7 @@
     "link:schematic": "yarn link && cd sandbox && yarn link @briebug/cypress-schematic",
     "publish": "yarn test && PUBLISH_CMD",
     "test": "yarn build:clean:launch && yarn test:sandbox && yarn clean",
-    "test:sandbox": "cd sandbox && yarn lint && yarn test && yarn e2e && yarn build",
+    "test:sandbox": "cd sandbox && yarn lint && yarn test && yarn build",
     "test:unit": "yarn build && jasmine src/**/*_spec.js"
   },
   "keywords": [

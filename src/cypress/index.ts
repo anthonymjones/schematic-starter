@@ -21,8 +21,8 @@ import {
   addPropertyToPackageJson,
   getAngularVersion,
   getLatestNodeVersion,
-  removePackageJsonDependency,
-  safeFileDelete
+  parseJsonAtPath,
+  removePackageJsonDependency
 } from "../utility/util";
 
 export default function(_options: any): Rule {
@@ -90,19 +90,24 @@ function updateDependencies(options: any): Rule {
 function removeFiles(options: any): Rule {
   return (tree: Tree, context: SchematicContext) => {
     if (options.removeProtractor) {
-      const deleteFiles = [
-        "./e2e/src/app.e2e-spec.ts",
-        "./e2e/src/app.po.ts",
-        "./e2e/protractor.conf.js",
-        "./e2e/tsconfig.e2e.json",
-        "./e2e/src",
-        "./e2e"
-      ];
-      deleteFiles.forEach(filePath => {
-        context.logger.debug(`removing ${filePath}`);
+      context.logger.debug("Removing e2e directory");
+      tree.delete("./e2e");
 
-        safeFileDelete(tree, filePath);
-      });
+      if (tree.exists("./angular.json")) {
+        const angularJsonAst = parseJsonAtPath(tree, "./angular.json");
+        if (angularJsonAst.value) {
+          let val = angularJsonAst.value as any;
+          context.logger.debug(
+            `Removing ${options.project ||
+              val.defaultProject}-e2e from angular.json projects`
+          );
+
+          delete val.projects[`${options.project || val.defaultProject}-e2e`];
+          console.log("val", val);
+
+          return tree.overwrite("./angular.json", JSON.stringify(val, null, 2));
+        }
+      }
 
       return tree;
     }
@@ -132,14 +137,3 @@ function addCypressScriptsToPackageJson(): Rule {
     return tree;
   };
 }
-
-// TODO: Add to the schema.json once deleting directories is available
-// "removeProtractor": {
-//   "description": "When true, the protractor dependency and e2e directory will be removed from the project",
-//   "type": "boolean",
-//   "$default": {
-//     "$source": "argv",
-//     "index": 0
-//   },
-//   "x-prompt": "Would you like to remove Protractor from the project?"
-// }
