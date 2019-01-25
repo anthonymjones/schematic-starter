@@ -1,13 +1,10 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "schematic-starter": {
-      "description": "A blank schematic.",
-      "factory": "./schematic-starter/index#schematicStarter"
-    },
-    "ng-add": {
-      "description": "Add SchematicStarter to an application.",
-      "factory": "./schematic-starter/index#schematicStarter"
+    "mat-dialog": {
+      "description": "Generates mat dialog components in an existing Angular CLI project",
+      "factory": "./mat-dialog/index",
+      "schema": "./mat-dialog/schema.json"
     }
   }
 }

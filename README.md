@@ -1,20 +1,37 @@
-# Schematics Starter with Sandbox
+# Mat Dialog Angular Schematic
 
-This repository is a basic Schematic implementation that serves as a starting point to create and publish Schematics to NPM.
+[![npm (scoped)](https://img.shields.io/npm/v/@briebug/mat-dialog-schematic.svg)](https://www.npmjs.com/package/@briebug/mat-dialog-schematic)
 
-More info on this sandbox approach is detailed in this blog post [kevinschuchard.com/blog/2018-11-20-schematic-sandbox/](https://www.kevinschuchard.com/blog/2018-11-20-schematic-sandbox/)
+Generate [Angular Material Dialogs](https://material.angular.io/components/dialog/overview) in an Angular CLI project
 
-## Branches
+This schematic will:
 
-### `master`
+- install @angular/material if not already installed
+- generate a component from which the dialog is launched, as well as the dialog component itself
+- handle the declaration, export, and entryComponent requirements for the 2 components
+- import the MatButton, MatDialog, and BrowserAnimations modules if not already installed
 
-contains the necessary scripts to build & publish a schematic
+## Usage 🚀
 
-### `component-license`
+Install globally
 
-example schematic that uses the Angular Component Schematic to generate a new component similar to `ng generate component NAME`. Also adds a license to each Typescript file with `name` provided by the CLI prompts. I have an article on CLI prompts [here](https://www.kevinschuchard.com/blog/2018-10-22-angular-cli-prompts/).
+```shell
+npm install -g @briebug/mat-dialog-schematic
+```
 
-## Getting started
+Then in an Angular CLI project run
+
+```shell
+ng g @briebug/mat-dialog-schematic
+```
+
+## Issues
+
+Issues with this schematic can be filed [here](https://github.com/briebug/mat-dialog-schematic/issues/new/choose).
+
+## Development 🛠
+
+### Getting started
 
 ⚙ [Yarn](https://yarnpkg.com/en/docs/install#mac-stable) is required for the scripts. Make sure it's installed on your machine.
 

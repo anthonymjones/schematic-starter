@@ -4,10 +4,10 @@ import * as path from "path";
 
 const collectionPath = path.join(__dirname, "../collection.json");
 
-describe("schematic-starter", () => {
+describe("mat-dialog", () => {
   it("works", () => {
     const runner = new SchematicTestRunner("schematics", collectionPath);
-    const tree = runner.runSchematic("schematic-starter", {}, Tree.empty());
+    const tree = runner.runSchematic("mat-dialog", {}, Tree.empty());
 
     expect(tree.files).toEqual([]);
   });
